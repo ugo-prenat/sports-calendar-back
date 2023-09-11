@@ -1,11 +1,9 @@
 import { Router } from 'express';
+import { createSession, getSessions } from './sessions.controllers';
 
 const sessionsRouter = Router();
 
-sessionsRouter.get('/', (req, res) => {
-  console.log(req.query);
-
-  res.status(200).json('sessions');
-});
+sessionsRouter.get('/', getSessions);
+sessionsRouter.post('/', createSession);
 
 export default sessionsRouter;

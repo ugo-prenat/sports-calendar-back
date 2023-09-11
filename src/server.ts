@@ -5,6 +5,7 @@ import { MORGGAN_FORMAT } from './constants';
 import express, { Application } from 'express';
 import sessionsRouter from './api/sessions/sessions.router';
 import eventsRouter from './api/events/events.router';
+import { dbConnect } from './db/config.db';
 
 dotenv.config();
 
@@ -20,4 +21,7 @@ app.use('/events', eventsRouter);
 
 app.use((_, res) => res.status(404).json({ error: 'route not found' }));
 
-app.listen(port, () => console.log(`🏎️  server running on port ${port}`));
+app.listen(port, () => {
+  console.log(`🏎️  server running on port ${port}`);
+  dbConnect();
+});
