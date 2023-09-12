@@ -40,3 +40,6 @@ export const CHAMPIONSHIPS = [
   ...MOTORSPORTS_CHAMPIONSHIPS,
   ...COMBAT_SPORTS_CHAMPIONSHIP
 ] as const;
+
+// TIME ZONES
+export const PARIS_TZ = 'Europe/Paris';

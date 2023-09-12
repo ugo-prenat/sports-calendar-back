@@ -5,7 +5,7 @@ interface ISessionModel extends Omit<ISession, 'id'>, Document {}
 
 const SessionSchema = new Schema(
   {
-    eventId: { type: Schema.Types.ObjectId, ref: 'events', required: true },
+    // eventId: { type: Schema.Types.ObjectId, ref: 'events', required: true },
     sport: { type: String, required: true },
     championship: { type: String, required: true },
     regionalized: {
@@ -24,4 +24,4 @@ const SessionSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-export default mongoose.model<ISessionModel>('sessions', SessionSchema);
+export const Session = mongoose.model<ISessionModel>('sessions', SessionSchema);

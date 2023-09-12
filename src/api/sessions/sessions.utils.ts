@@ -1,8 +1,10 @@
-import { isBefore } from 'date-fns';
+import { endOfDay, isBefore, startOfDay } from 'date-fns';
 import { cleanArray, isEmpty, isValidDate } from '../../utils';
 import { IGetSessionsQuery, sessionSchema } from './sessions.models';
 import { CHAMPIONSHIPS } from '../../constants';
 import { ChampionshipId, ISession } from '../../models/sports.models';
+import { Session } from '../../db/models.db';
+import { zonedTimeToUtc } from 'date-fns-tz';
 
 export const searchSessionsQuery = (query: IGetSessionsQuery) => {
   const { range, championships: rawChampionships } = query;
@@ -67,3 +69,15 @@ export const validateBody = (
 
   return { success: true, error: null };
 };
+
+export const getSessionsOfTheDay = (
+  date: Date,
+  championships: ChampionshipId[]
+) =>
+  Session.find({
+    championship: { $in: championships },
+    startTime: {
+      $gte: startOfDay(date).toISOString(),
+      $lte: endOfDay(date).toISOString()
+    }
+  });

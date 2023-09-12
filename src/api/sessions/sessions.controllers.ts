@@ -1,12 +1,25 @@
 import { Response } from 'express';
-import { searchSessionsQuery, validateBody } from './sessions.utils';
+import {
+  getSessionsOfTheDay,
+  searchSessionsQuery,
+  validateBody
+} from './sessions.utils';
 import { CreateSessionRequest, GetSessionsRequest } from './sessions.models';
+import { Session } from '../../db/models.db';
+import { eachDayOfInterval } from 'date-fns';
 
 export const getSessions = (req: GetSessionsRequest, res: Response) => {
   const { error, range, championships } = searchSessionsQuery(req.query);
   if (error || !range || !championships) return res.status(400).json({ error });
 
-  res.status(200).json({ range, championships });
+  const sessions = eachDayOfInterval({
+    start: new Date(range.start),
+    end: new Date(range.end)
+  }).map((date) => getSessionsOfTheDay(date, championships));
+
+  Promise.all(sessions)
+    .then((sessions) => res.status(200).json(sessions))
+    .catch((err) => res.status(500).json({ error: err.message }));
 };
 
 export const createSession = (req: CreateSessionRequest, res: Response) => {
@@ -16,9 +29,8 @@ export const createSession = (req: CreateSessionRequest, res: Response) => {
   if (!validation.success)
     return res.status(400).json({ error: validation.error });
 
-  // --------------------
-  // create session in db
-  // --------------------
-
-  res.status(201).json({ msg: "that's a valid session" });
+  new Session(body)
+    .save()
+    .then((session) => res.status(201).json(session))
+    .catch((err) => res.status(500).json({ error: err.message }));
 };
