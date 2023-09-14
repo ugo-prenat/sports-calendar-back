@@ -5,7 +5,7 @@ import { MORGGAN_FORMAT } from './constants';
 import express, { Application } from 'express';
 import sessionsRouter from './api/sessions/sessions.router';
 import eventsRouter from './api/events/events.router';
-import { dbConnect } from './db/config.db';
+import { dbConnect } from './db/db.config';
 
 dotenv.config();
 

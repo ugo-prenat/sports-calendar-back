@@ -1,24 +1,36 @@
 import { Response } from 'express';
 import {
   getSessionsOfTheDay,
+  makeOverlapedSessions,
   searchSessionsQuery,
   validateBody
 } from './sessions.utils';
 import { CreateSessionRequest, GetSessionsRequest } from './sessions.models';
-import { Session } from '../../db/models.db';
+import { ISessionQuery, Session } from '../../db/db.models';
 import { eachDayOfInterval } from 'date-fns';
 
 export const getSessions = (req: GetSessionsRequest, res: Response) => {
   const { error, range, championships } = searchSessionsQuery(req.query);
   if (error || !range || !championships) return res.status(400).json({ error });
 
-  const sessions = eachDayOfInterval({
+  const days = eachDayOfInterval({
     start: new Date(range.start),
     end: new Date(range.end)
-  }).map((date) => getSessionsOfTheDay(date, championships));
+  });
+
+  const sessions: ISessionQuery[] = days.map((date) =>
+    getSessionsOfTheDay(date, championships)
+  );
 
   Promise.all(sessions)
-    .then((sessions) => res.status(200).json(sessions))
+    .then((sessions) =>
+      res.status(200).json(
+        days.map((date, i) => ({
+          date,
+          overlapedSessions: makeOverlapedSessions(sessions[i])
+        }))
+      )
+    )
     .catch((err) => res.status(500).json({ error: err.message }));
 };
 

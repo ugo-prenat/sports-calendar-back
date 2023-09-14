@@ -1,7 +1,28 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, {
+  Document,
+  Query,
+  QueryOptions,
+  Schema,
+  Types
+} from 'mongoose';
 import { ISession } from '../models/sports.models';
 
-interface ISessionModel extends Omit<ISession, 'id'>, Document {}
+export interface ISessionModel extends Omit<ISession, 'id'>, Document {}
+
+export interface IAPISession extends ISessionModel {
+  _id: Types.ObjectId;
+}
+
+export type IMongooseSession = Document<unknown, {}, ISessionModel> &
+  IAPISession;
+
+export type ISessionQuery<T extends string = 'find'> = Query<
+  IMongooseSession[],
+  IMongooseSession,
+  {},
+  ISessionModel,
+  T
+>;
 
 const SessionSchema = new Schema(
   {

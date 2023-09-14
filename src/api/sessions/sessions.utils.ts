@@ -3,10 +3,22 @@ import { cleanArray, isEmpty, isValidDate } from '../../utils';
 import { IGetSessionsQuery, sessionSchema } from './sessions.models';
 import { CHAMPIONSHIPS } from '../../constants';
 import { ChampionshipId, ISession } from '../../models/sports.models';
-import { Session } from '../../db/models.db';
-import { zonedTimeToUtc } from 'date-fns-tz';
+import {
+  IAPISession,
+  IMongooseSession,
+  ISessionModel,
+  ISessionQuery,
+  Session
+} from '../../db/db.models';
+import { Document, Query, Types } from 'mongoose';
 
-export const searchSessionsQuery = (query: IGetSessionsQuery) => {
+export const searchSessionsQuery = (
+  query: IGetSessionsQuery
+): {
+  error: string | null;
+  range?: { start: string; end: string };
+  championships?: ChampionshipId[];
+} => {
   const { range, championships: rawChampionships } = query;
 
   if (isEmpty(query))
@@ -29,6 +41,7 @@ export const searchSessionsQuery = (query: IGetSessionsQuery) => {
     return getInvalidChampionships(championships);
 
   return {
+    error: null,
     range: { start, end },
     championships: championships as ChampionshipId[]
   };
@@ -73,7 +86,7 @@ export const validateBody = (
 export const getSessionsOfTheDay = (
   date: Date,
   championships: ChampionshipId[]
-) =>
+): ISessionQuery =>
   Session.find({
     championship: { $in: championships },
     startTime: {
@@ -81,3 +94,7 @@ export const getSessionsOfTheDay = (
       $lte: endOfDay(date).toISOString()
     }
   });
+
+export const makeOverlapedSessions = (
+  sessions: IMongooseSession[] | undefined
+) => {};
