@@ -1,4 +1,9 @@
-import { endOfDay, isBefore, startOfDay } from 'date-fns';
+import {
+  areIntervalsOverlapping,
+  endOfDay,
+  isBefore,
+  startOfDay
+} from 'date-fns';
 import { cleanArray, isEmpty, isValidDate } from '../../utils';
 import { IGetSessionsQuery, sessionSchema } from './sessions.models';
 import { CHAMPIONSHIPS } from '../../constants';
@@ -97,4 +102,42 @@ export const getSessionsOfTheDay = (
 
 export const makeOverlapedSessions = (
   sessions: IMongooseSession[] | undefined
-) => {};
+) => {
+  const overlappingSessions: IMongooseSession[][] = [];
+  const sessionDates: Date[] = [];
+
+  if (!sessions) return overlappingSessions;
+
+  sessions.map((session) => {
+    const start = new Date(session.startTime);
+    const end = new Date(session.endTime);
+
+    let foundOverlap = false;
+
+    sessionDates.map((_, index) => {
+      if (!foundOverlap) {
+        const overlap = overlappingSessions[index]?.some((existingSession) => {
+          const existingStart = new Date(existingSession.startTime);
+          const existingEnd = new Date(existingSession.endTime);
+
+          return areIntervalsOverlapping(
+            { start, end },
+            { start: existingStart, end: existingEnd }
+          );
+        });
+
+        if (overlap) {
+          overlappingSessions[index]?.push(session);
+          foundOverlap = true;
+        }
+      }
+    });
+
+    if (!foundOverlap) {
+      sessionDates.push(start);
+      overlappingSessions.push([session]);
+    }
+  });
+
+  return overlappingSessions;
+};

@@ -42,7 +42,7 @@ const SessionSchema = new Schema(
     startTime: { type: String, required: true },
     endTime: { type: String, required: true }
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false, timestamps: false }
 );
 
 export const Session = mongoose.model<ISessionModel>('sessions', SessionSchema);
