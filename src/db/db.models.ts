@@ -29,16 +29,7 @@ const SessionSchema = new Schema(
     // eventId: { type: Schema.Types.ObjectId, ref: 'events', required: true },
     sport: { type: String, required: true },
     championship: { type: String, required: true },
-    regionalized: {
-      en: {
-        name: { type: String, required: true },
-        shortName: { type: String }
-      },
-      fr: {
-        name: { type: String },
-        shortName: { type: String }
-      }
-    },
+    type: { type: String, required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true }
   },

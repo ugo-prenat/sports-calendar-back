@@ -1,6 +1,7 @@
 import {
   COMBAT_SPORTS_CHAMPIONSHIP,
   MOTORSPORTS_CHAMPIONSHIPS,
+  SESSIONS,
   SPORTS_TYPES
 } from '../constants';
 
@@ -11,6 +12,8 @@ export type CombatSportChampionship =
   (typeof COMBAT_SPORTS_CHAMPIONSHIP)[number];
 
 export type ChampionshipId = MotorsportChampionship | CombatSportChampionship;
+
+export type Session = (typeof SESSIONS)[number];
 
 export interface IRegionalized<T extends { [key: string]: any }> {
   en: T;
@@ -56,10 +59,7 @@ export interface ISession {
   // eventId: string;
   sport: SportType;
   championship: ChampionshipId;
-  regionalized: IRegionalized<{
-    name: string;
-    shortName?: string;
-  }>;
+  type: Session;
   startTime: string;
   endTime: string;
 }
