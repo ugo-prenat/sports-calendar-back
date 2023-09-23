@@ -34,15 +34,18 @@ export const getSessions = (req: GetSessionsRequest, res: Response) => {
     .catch((err) => res.status(500).json({ error: err.message }));
 };
 
-export const createSession = (req: CreateSessionRequest, res: Response) => {
+export const createSessions = (req: CreateSessionRequest, res: Response) => {
   const { body } = req;
-  const validation = validateBody(body);
+  const validations = body.map((session) => validateBody(session));
 
-  if (!validation.success)
-    return res.status(400).json({ error: validation.error });
+  if (validations.some((validation) => !validation.success))
+    return res
+      .status(400)
+      .json({ error: validations.find((session) => !session.success)?.error });
 
-  new Session(body)
-    .save()
-    .then((session) => res.status(201).json(session))
+  const sessionsCreation = body.map((session) => new Session(session).save());
+
+  Promise.all(sessionsCreation)
+    .then(() => res.status(201).end())
     .catch((err) => res.status(500).json({ error: err.message }));
 };

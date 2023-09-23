@@ -26,7 +26,7 @@ export interface IEvent {
   championship: ChampionshipId;
   regionalized: IRegionalized<{
     name: string;
-    shortName: string;
+    shortName?: string;
   }>;
   startTime: string;
   endTime: string;
@@ -35,10 +35,7 @@ export interface IEvent {
 }
 
 export interface IEventCountry {
-  regionalized: IRegionalized<{
-    code: string;
-    name?: string; // i18n à partir du code ?
-  }>;
+  code: string;
   flag: string;
 }
 
@@ -51,12 +48,12 @@ export interface IEventLocation {
     lat: number;
     lng: number;
   };
-  track?: string; // juste pour les sports mécaniques
+  track?: string;
 }
 
 export interface ISession {
   id: string;
-  // eventId: string;
+  eventId: string;
   sport: SportType;
   championship: ChampionshipId;
   type: Session;
