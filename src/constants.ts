@@ -48,6 +48,7 @@ export const FREE_PRACTICE_2 = 'free-practice-2';
 export const FREE_PRACTICE_3 = 'free-practice-3';
 export const PRE_QUALIFYING = 'pre-qualifying';
 export const QUALIFYING = 'qualifying';
+export const SPRINT = 'sprint';
 export const RACE = 'race';
 export const RACE_1 = 'race-1';
 export const RACE_2 = 'race-2';
@@ -59,6 +60,7 @@ export const SESSIONS = [
   FREE_PRACTICE_3,
   PRE_QUALIFYING,
   QUALIFYING,
+  SPRINT,
   RACE,
   RACE_1,
   RACE_2
