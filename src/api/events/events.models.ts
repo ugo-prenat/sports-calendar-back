@@ -4,11 +4,10 @@ import { CHAMPIONSHIPS, SPORTS_TYPES } from '../../constants';
 import { Request } from 'express';
 
 export interface IGetEventQuery {
-  range?: string;
-  championships?: string;
+  sessions?: boolean;
 }
 
-export type GetEventRequest = Request<{}, {}, {}, IGetEventQuery>;
+export type GetEventsRequest = Request<{}, {}, {}, IGetEventQuery>;
 export type CreateEventRequest = Request<{}, {}, IEvent>;
 
 export const eventSchema: z.ZodType<Omit<IEvent, 'eventId' | 'id'>> = z.object({

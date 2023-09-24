@@ -1,12 +1,38 @@
-import { Request, Response } from 'express';
-import { CreateEventRequest } from './events.models';
+import { Response } from 'express';
+import { CreateEventRequest, GetEventsRequest } from './events.models';
 import { validateBody } from './events.utils';
-import { Event } from '../../db/db.models';
+import { Event, Session } from '../../db/db.models';
 
-export const getEvents = (req: Request, res: Response) =>
+export const getEvents = (req: GetEventsRequest, res: Response) => {
+  const { sessions } = req.query;
+
   Event.find()
-    .then((events) => res.status(200).json(events))
+    .then((events) => {
+      if (!sessions) return res.status(200).json(events);
+
+      const eventsWithSessions = events.map((event) =>
+        Session.find({ eventId: event._id })
+      );
+
+      Promise.all(eventsWithSessions)
+        .then((sessions) => {
+          const eventsWithSessions = events.map((event, i) => ({
+            _id: event._id,
+            sport: event.sport,
+            championship: event.championship,
+            regionalized: event.regionalized,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            country: event.country,
+            location: event.location,
+            sessions: sessions[i]
+          }));
+          res.status(200).json(eventsWithSessions);
+        })
+        .catch((err) => res.status(500).json({ error: err.message }));
+    })
     .catch((err) => res.status(500).json({ error: err.message }));
+};
 
 export const createEvent = (req: CreateEventRequest, res: Response) => {
   const { body } = req;
