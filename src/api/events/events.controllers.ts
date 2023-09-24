@@ -1,7 +1,12 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { CreateEventRequest } from './events.models';
 import { validateBody } from './events.utils';
 import { Event } from '../../db/db.models';
+
+export const getEvents = (req: Request, res: Response) =>
+  Event.find()
+    .then((events) => res.status(200).json(events))
+    .catch((err) => res.status(500).json({ error: err.message }));
 
 export const createEvent = (req: CreateEventRequest, res: Response) => {
   const { body } = req;
