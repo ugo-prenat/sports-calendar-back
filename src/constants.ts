@@ -6,8 +6,7 @@ export const MORGGAN_FORMAT = 'dev';
 
 // SPORTS
 export const MOTORSPORTS = 'motorsports';
-export const COMBAT_SPORTS = 'combat-sports';
-export const SPORTS_TYPES = [MOTORSPORTS, COMBAT_SPORTS] as const;
+export const SPORTS_TYPES = [MOTORSPORTS] as const;
 
 // CHAMIPONSHIPS
 
@@ -33,13 +32,7 @@ export const MOTORSPORTS_CHAMPIONSHIPS = [
   GT_WORLD_CHALLENGE
 ] as const;
 
-export const UFC = 'ufc';
-export const COMBAT_SPORTS_CHAMPIONSHIP = [UFC] as const;
-
-export const CHAMPIONSHIPS = [
-  ...MOTORSPORTS_CHAMPIONSHIPS,
-  ...COMBAT_SPORTS_CHAMPIONSHIP
-] as const;
+export const CHAMPIONSHIPS = [...MOTORSPORTS_CHAMPIONSHIPS] as const;
 
 // SESSIONS
 export const FREE_PRACTICE = 'free-practice';
