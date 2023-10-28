@@ -7,6 +7,7 @@ export const getEvents = (req: GetEventsRequest, res: Response) => {
   const { sessions } = req.query;
 
   Event.find()
+    .sort({ startTime: -1 })
     .then((events) => {
       if (!sessions) return res.status(200).json(events);
 
