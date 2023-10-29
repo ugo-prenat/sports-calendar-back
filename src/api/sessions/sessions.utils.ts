@@ -8,14 +8,7 @@ import { cleanArray, isEmpty, isValidDate } from '../../utils';
 import { IGetSessionsQuery, sessionSchema } from './sessions.models';
 import { CHAMPIONSHIPS } from '../../constants';
 import { ChampionshipId, ISession } from '../../models/sports.models';
-import {
-  IAPISession,
-  IMongooseSession,
-  ISessionModel,
-  ISessionQuery,
-  Session
-} from '../../db/db.models';
-import { Document, Query, Types } from 'mongoose';
+import { IMongooseSession, ISessionQuery, Session } from '../../db/db.models';
 
 export const searchSessionsQuery = (
   query: IGetSessionsQuery
