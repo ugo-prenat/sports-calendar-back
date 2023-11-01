@@ -46,6 +46,6 @@ export const createSessions = (req: CreateSessionRequest, res: Response) => {
   const sessionsCreation = body.map((session) => new Session(session).save());
 
   Promise.all(sessionsCreation)
-    .then(() => res.status(201).end())
+    .then((sessions) => res.status(201).json(sessions))
     .catch((err) => res.status(500).json({ error: err.message }));
 };
